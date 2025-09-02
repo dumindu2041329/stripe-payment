@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import { usePayment } from '../contexts/PaymentContext';
+import { useNavigate } from 'react-router-dom';
 
 // Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -22,6 +24,9 @@ const PdfDownloadPage: React.FC = () => {
     currency: 'USD',
     description: 'A comprehensive guide to modern web development practices'
   });
+  
+  const { isPaymentVerified } = usePayment();
+  const navigate = useNavigate();
 
   // Fetch product info from backend
   useEffect(() => {
@@ -78,20 +83,11 @@ const PdfDownloadPage: React.FC = () => {
     }
   };
 
-  const handlePreview = async () => {
-    try {
-      // Check if file exists first
-      const response = await fetch(pdfDocument.downloadUrl, { method: 'HEAD' });
-      if (!response.ok) {
-        alert('PDF file not found. Please contact support.');
-        return;
-      }
-      
-      // Open PDF in new tab for preview
-      window.open(pdfDocument.downloadUrl, '_blank');
-    } catch (error) {
-      console.error('Preview failed:', error);
-      alert('Preview failed. Please try again later.');
+  const handleAccessContent = () => {
+    if (isPaymentVerified) {
+      navigate('/download');
+    } else {
+      handleCheckout();
     }
   };
 
@@ -101,10 +97,13 @@ const PdfDownloadPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Download Premium Document
+            {isPaymentVerified ? 'Access Your Content' : 'Download Premium Document'}
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Get instant access to high-quality resources designed to accelerate your learning journey.
+            {isPaymentVerified 
+              ? 'Welcome back! Your purchase is verified and ready for access.'
+              : 'Get instant access to high-quality resources designed to accelerate your learning journey.'
+            }
           </p>
         </div>
 
@@ -159,14 +158,31 @@ const PdfDownloadPage: React.FC = () => {
                 </div>
 
                 {/* Price Display */}
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-gray-900 mb-2">
-                      ${productInfo.price.toFixed(2)} {productInfo.currency}
+                {!isPaymentVerified && (
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-6">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-gray-900 mb-2">
+                        ${productInfo.price.toFixed(2)} {productInfo.currency}
+                      </div>
+                      <div className="text-gray-600">One-time purchase • Lifetime access</div>
                     </div>
-                    <div className="text-gray-600">One-time purchase • Lifetime access</div>
                   </div>
-                </div>
+                )}
+                
+                {/* Verified User Status */}
+                {isPaymentVerified && (
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-6">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-2">
+                        <svg className="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="text-lg font-semibold text-gray-900">Payment Verified</span>
+                      </div>
+                      <div className="text-gray-600">You have lifetime access to this content</div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Features List */}
                 <div className="space-y-3">
@@ -199,44 +215,17 @@ const PdfDownloadPage: React.FC = () => {
                   </ul>
                 </div>
 
-                {/* Download Buttons */}
+                {/* Action Buttons */}
                 <div className="pt-4 space-y-3">
-                  {/* Preview Button */}
+                  {/* Main Action Button */}
                   <button
-                    onClick={handlePreview}
-                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 px-8 rounded-xl transition-all duration-200 border border-gray-300 hover:border-gray-400"
-                  >
-                    <div className="flex items-center justify-center space-x-3">
-                      <svg 
-                        className="w-5 h-5" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" 
-                        />
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" 
-                        />
-                      </svg>
-                      <span>Preview PDF</span>
-                    </div>
-                  </button>
-
-                  {/* Buy Now Button */}
-                  <button
-                    onClick={handleCheckout}
+                    onClick={handleAccessContent}
                     disabled={isLoading}
                     className={`w-full text-white font-semibold py-4 px-8 rounded-xl transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl ${
                       isLoading 
                         ? 'bg-gray-400 cursor-not-allowed' 
+                        : isPaymentVerified
+                        ? 'bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700'
                         : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
                     }`}
                   >
@@ -248,6 +237,23 @@ const PdfDownloadPage: React.FC = () => {
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
                           <span>Processing...</span>
+                        </>
+                      ) : isPaymentVerified ? (
+                        <>
+                          <svg 
+                            className="w-6 h-6" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round" 
+                              strokeWidth={2} 
+                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                            />
+                          </svg>
+                          <span>Access Your Content</span>
                         </>
                       ) : (
                         <>
@@ -271,7 +277,10 @@ const PdfDownloadPage: React.FC = () => {
                   </button>
                   
                   <p className="text-center text-sm text-gray-500 mt-3">
-                    Instant download • Secure payment • 30-day money-back guarantee
+                    {isPaymentVerified 
+                      ? 'Your access is verified and secure'
+                      : 'Instant download • Secure payment • 30-day money-back guarantee'
+                    }
                   </p>
                 </div>
               </div>
