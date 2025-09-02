@@ -49,8 +49,8 @@ const PdfDownloadPage: React.FC = () => {
     id: '1',
     title: productInfo.name,
     description: productInfo.description,
-    size: '2.4 MB',
-    pages: 95,
+    size: '579 KB',
+    pages: 44,
     downloadUrl: '/sample-document.pdf',
     previewImage: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&auto=format'
   };
