@@ -1,69 +1,160 @@
-# React + TypeScript + Vite
+# stripe-payment
+>>>>>>> 0107a93cbaf8d5b06e8dd9576fbb3d41ecf76965
+# Stripe Payment Integration for PDF Downloads
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application with Stripe payment integration for selling and downloading PDF documents. Built with React, TypeScript, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Secure Payment Processing**: Integrated with Stripe for secure credit card transactions
+- **Modern UI/UX**: Clean, responsive design built with Tailwind CSS
+- **PDF Download**: Secure PDF delivery after successful payment
+- **Payment Flow**: Complete checkout → payment → success → download flow
+- **Type Safety**: Full TypeScript implementation
+- **Fast Development**: Vite for lightning-fast builds and HMR
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS
+- **Backend**: Express.js + Node.js
+- **Payment**: Stripe Checkout + Stripe SDK
+- **Routing**: React Router
+- **Styling**: Tailwind CSS + Custom Components
+- **Build Tool**: Vite with HMR
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📋 Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- Node.js (v16 or higher)
+- npm or yarn
+- Stripe Account (free at [stripe.com](https://stripe.com))
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## ⚙️ Installation & Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/dumindu2041329/stripe-payment.git
+   cd stripe-payment
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**:
+   ```bash
+   # Copy the example file
+   cp .env.example .env
+   
+   # Add your Stripe keys to .env
+   VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
+   STRIPE_SECRET_KEY=sk_test_your_secret_key
+   ```
+
+4. **Run the application**:
+   ```bash
+   # Start both frontend and backend
+   npm run dev:all
+   
+   # Or run separately:
+   npm run dev      # Frontend (port 5173)
+   npm run server   # Backend (port 3001)
+   ```
+
+## 🔑 Getting Stripe Keys
+
+1. Sign up at [stripe.com](https://stripe.com)
+2. Go to Dashboard → Developers → API keys
+3. Copy your **Publishable key** and **Secret key**
+4. Use test keys for development (they start with `pk_test_` and `sk_test_`)
+
+## 💳 Testing Payments
+
+Use these test card numbers:
+
+- **Success**: `4242 4242 4242 4242`
+- **Decline**: `4000 0000 0000 0002`
+- **Expiry**: Any future date
+- **CVC**: Any 3-digit number
+
+## 📁 Project Structure
+
+```
+stripe-payment/
+├── backend/
+│   └── server.cjs          # Express server with Stripe integration
+├── src/
+│   ├── components/
+│   │   ├── PdfDownloadPage.tsx  # Main product page
+│   │   └── SuccessPage.tsx      # Post-payment success page
+│   └── App.tsx             # Router configuration
+├── public/
+│   └── sample-document.pdf # PDF file for download
+├── .env.example           # Environment variables template
+└── STRIPE_SETUP.md       # Detailed setup guide
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🔄 Payment Flow
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. User visits the PDF download page
+2. Clicks "Buy Now" button ($10.00)
+3. Redirected to Stripe Checkout
+4. Completes payment with test card
+5. Redirected to success page
+6. Downloads PDF immediately
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🌐 Live Demo
+
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:3001
+- **Health Check**: http://localhost:3001/health
+
+## 📚 API Endpoints
+
+- `POST /create-checkout-session` - Create Stripe checkout
+- `GET /verify-session/:id` - Verify payment
+- `GET /product-info` - Product details
+- `GET /health` - Server status
+
+## 🚀 Deployment
+
+For production deployment:
+
+1. Replace test Stripe keys with live keys
+2. Update `CLIENT_URL` in `.env`
+3. Deploy frontend to Vercel/Netlify
+4. Deploy backend to Heroku/Railway
+5. Ensure HTTPS (required for live payments)
+
+## 🔧 Development
+
+This project uses Vite with the following plugins:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) - Uses Babel for Fast Refresh
+- TypeScript support with strict type checking
+- ESLint with React-specific rules
+- Tailwind CSS for utility-first styling
+
+## 📄 License
+
+MIT License - feel free to use this project for learning or commercial purposes.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📞 Support
+
+- **Stripe Docs**: https://stripe.com/docs
+- **Issues**: Open an issue on GitHub
+- **Email**: dumindu2041329@gmail.com
+
+---
+
+**Ready to start selling digital products?** 🚀
+=======
+# stripe-payment
+>>>>>>> 0107a93cbaf8d5b06e8dd9576fbb3d41ecf76965
