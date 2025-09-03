@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "node backend/server.cjs",
-    "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
-    "vercel-build": "npm run build"
+    "dev:all": "concurrently \"npm run dev\" \"npm run server\""
   },
   "dependencies": {
     "@stripe/stripe-js": "^7.9.0",
