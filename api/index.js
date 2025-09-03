@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const stripe = require('stripe');
+import express from 'express';
+import cors from 'cors';
+import stripe from 'stripe';
 
 const app = express();
 
@@ -89,4 +89,4 @@ app.get('/api/product-info', (req, res) => {
 });
 
 // For Vercel, we need to export the app
-module.exports = app;
+export default app;
