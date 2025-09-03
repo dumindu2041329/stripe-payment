@@ -105,7 +105,7 @@ export const PaymentProvider: React.FC<PaymentProviderProps> = ({ children }) =>
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:3001/verify-session/${sessionId}`);
+      const response = await fetch(`/api/verify-session/${sessionId}`);
       if (!response.ok) {
         throw new Error('Failed to verify payment');
       }

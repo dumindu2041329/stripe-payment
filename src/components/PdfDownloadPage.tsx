@@ -32,7 +32,7 @@ const PdfDownloadPage: React.FC = () => {
   useEffect(() => {
     const fetchProductInfo = async () => {
       try {
-        const response = await fetch('http://localhost:3001/product-info');
+        const response = await fetch('/api/product-info');
         if (response.ok) {
           const data = await response.json();
           setProductInfo(data);
@@ -60,7 +60,7 @@ const PdfDownloadPage: React.FC = () => {
       setIsLoading(true);
       
       // Create checkout session
-      const response = await fetch('http://localhost:3001/create-checkout-session', {
+      const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

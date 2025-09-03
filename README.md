@@ -118,12 +118,34 @@ stripe-payment/
 
 ## 🚀 Deployment
 
-For production deployment:
+### Vercel Deployment (Recommended)
+
+This project is optimized for Vercel deployment with serverless functions:
+
+1. **Quick Deploy**:
+   ```bash
+   npm install -g vercel
+   vercel login
+   vercel
+   ```
+
+2. **Set Environment Variables** in Vercel Dashboard:
+   - `VITE_STRIPE_PUBLISHABLE_KEY`
+   - `STRIPE_SECRET_KEY`
+   - `CLIENT_URL` (your Vercel domain)
+   - `PDF_PRICE_USD`
+   - `PDF_NAME`
+
+3. **See detailed deployment guide**: [`VERCEL_DEPLOYMENT.md`](./VERCEL_DEPLOYMENT.md)
+
+### Other Platforms
+
+For production deployment on other platforms:
 
 1. Replace test Stripe keys with live keys
-2. Update `CLIENT_URL` in `.env`
-3. Deploy frontend to Vercel/Netlify
-4. Deploy backend to Heroku/Railway
+2. Update `CLIENT_URL` in environment variables
+3. Deploy frontend to your preferred static host
+4. Deploy backend API to serverless platform
 5. Ensure HTTPS (required for live payments)
 
 ## 🔧 Development
