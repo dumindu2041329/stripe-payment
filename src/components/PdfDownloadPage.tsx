@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
 import { usePayment } from '../contexts/PaymentContext';
 import { useNavigate } from 'react-router-dom';
-
-// Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface PdfDocument {
   id: string;
